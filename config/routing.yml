@@ -1,4 +1,4 @@
-api_entry:
+ws_entry:
   url: /api/:model
   class: sfRequestRoute
   param: { module: sfRestWebService, action: entry }
@@ -6,10 +6,14 @@ api_entry:
     id: \d+
     sf_method: [GET, POST]
 
-api_resource:
+ws_resource:
   url:  /api/:model/:id
   class: sfRequestRoute
   param: { module: sfRestWebService, action: resource }
   requirements:
     id: \d+
     sf_method: [GET, POST, PUT, DELETE]
+
+ws_500:
+  url:  /api/error
+  param: { module: sfRestWebService, action: 500 }

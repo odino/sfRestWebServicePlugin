@@ -10,16 +10,21 @@ class sfRestWebServiceActions extends sfActions
     {
       $this->authenticate($this->request);
     }
-
-    $this->checkModelAvailability($this->request);
   }
 
   public function executeEntry(sfWebRequest $request)
   {
+    $query = $this->getQuery($request);
   }
   
   public function executeResource(sfWebRequest $request)
   {
+    $query = $this->getQuery($request);
+  }
+
+  public function execute500(sfWebRequest $request)
+  {
+    
   }
 
   protected function authenticate(sfWebRequest $request)
@@ -44,6 +49,19 @@ class sfRestWebServiceActions extends sfActions
     {
       $this->forward404();
     }
+  }
+
+  protected function getQuery(sfWebRequest $request)
+  {
+    $this->checkModelAvailability($request);
+
+    if (!class_exists($this->model))
+    {
+      $this->response->setStatusCode(500);
+      $this->forward('sfRestWebService', '500');
+    }
+
+    return Doctrine::getTable($this->model)->createQuery('wsmodel');
   }
 
   protected function isProtected()

@@ -1,0 +1,29 @@
++* url
++  /api/:key/:model/:id
++  /api/:key/:model
+
++* Authentication
++  * check authentication is enabled
++  * check the model is askable
+
+* request
+  * POST
+  * GET
+    * method for query
+  * PUT
+  * DELETE
+
+* response
+  * format
+    * XML
+    * YAML
+    * JSON
+
+* Webservice
+
+* Configuration
+  * authentication enabled/disabled
+  * api key file
+  * allowed models
+    * allowed states
+    * method for query
