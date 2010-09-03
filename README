@@ -1,3 +1,13 @@
+.Enable the plugin in your projectConfiguration class
+
+  public function setup()
+  {
+    $this->enablePlugins('sfDoctrinePlugin');
+    $this->enablePlugins('sfRestWebServicePlugin');
+  }
+
+remember this plugin works with Doctrine.
+
 .Enable the module in settings.yml of your app:
   enabled_modules:        [sfRestWebService]
 
@@ -7,6 +17,20 @@
       protected: true
       allowed: [127.0.0.1]
       protected_route: secure
+      models: ~
+
+.Allowed models
+      models: ~
+
+or
+      models:
+        User:
+          method_for_query: ~
+
+or
+      models:
+        User:
+          method_for_query: findActives
 
 .if you turn on authentication, remember to specify a secure route.
   if you have module "default" enabled, the route can be "secure" ( which is the name of the "default/secure" route )

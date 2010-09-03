@@ -10,6 +10,8 @@ class sfRestWebServiceActions extends sfActions
     {
       $this->authenticate($this->request);
     }
+
+    $this->checkModelAvailability($this->request);
   }
 
   public function executeEntry(sfWebRequest $request)
@@ -31,6 +33,17 @@ class sfRestWebServiceActions extends sfActions
 
     $this->response->setStatusCode('403');
     $this->redirect(sfConfig::get('app_ws_protected_route'), '403');
+  }
+
+  protected function checkModelAvailability(sfWebRequest $request)
+  {
+    $this->model = $request->getParameter('model');
+    $models = sfConfig::get('app_ws_models');
+
+    if (is_array($models) && !array_key_exists($this->model, $models))
+    {
+      $this->forward404();
+    }
   }
 
   protected function isProtected()
