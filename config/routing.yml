@@ -1,0 +1,15 @@
+api_entry:
+  url: /api/:model
+  class: sfRequestRoute
+  param: { module: sfRestWebService, action: entry }
+  requirements:
+    id: \d+
+    sf_method: [GET, POST]
+
+api_resource:
+  url:  /api/:model/:id
+  class: sfRequestRoute
+  param: { module: sfRestWebService, action: resource }
+  requirements:
+    id: \d+
+    sf_method: [GET, POST, PUT, DELETE]

@@ -1,0 +1,3 @@
+.Enable the module in settings.yml of your app:
+  enabled_modules:        [sfRestWebService]
+
