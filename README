@@ -1,3 +1,12 @@
 .Enable the module in settings.yml of your app:
   enabled_modules:        [sfRestWebService]
 
+.app yaml:
+  all:
+    ws:
+      protected: true
+      allowed: [127.0.0.1]
+      protected_route: secure
+
+.if you turn on authentication, remember to specify a secure route.
+  if you have module "default" enabled, the route can be "secure" ( which is the name of the "default/secure" route )
