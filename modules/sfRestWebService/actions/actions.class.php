@@ -14,6 +14,8 @@ class sfRestWebServiceActions extends sfActions
       $this->authenticate($this->request);
     }
 
+    $this->checkContentType($this->request);
+
     $this->feedback = '';
   }
 
@@ -56,6 +58,15 @@ class sfRestWebServiceActions extends sfActions
     
     $this->response->setStatusCode('403');
     $this->redirect(sfConfig::get('app_ws_protected_route'), '403');
+  }
+
+  protected function checkContentType(sfWebRequest $request)
+  {
+    if ($request->getRequestFormat() == 'yaml')
+    {
+      $this->setLayout(false);
+      $this->getResponse()->setContentType('text/yaml');
+    }
   }
 
   protected function checkModelAvailability(sfWebRequest $request)
