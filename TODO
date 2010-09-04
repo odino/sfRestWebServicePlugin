@@ -6,16 +6,17 @@
 +  * check authentication is enabled
 +  * check the model is askable
 
-* request
-  * POST
++* request
++  * POST
   * GET
     * method for query
-  * PUT
-  * DELETE
+    * by column
++  * PUT
++  * DELETE
 
-* response
-  * format
-    * XML
++* response
++  * format
++    * XML
     * YAML
     * JSON
 
@@ -27,3 +28,6 @@
   * allowed models
     * allowed states
     * method for query
+
+* Other
+  * specify models in the app.yml

@@ -1,18 +1,18 @@
 ws_entry:
-  url: /api/:model
+  url: /api/:model.:sf_format
   class: sfRequestRoute
-  param: { module: sfRestWebService, action: entry }
+  param: { module: sfRestWebService, action: entry, sf_format: xml }
   requirements:
     id: \d+
     sf_method: [GET, POST]
 
 ws_resource:
-  url:  /api/:model/:id
+  url:  /api/:model/:id.:sf_format
   class: sfRequestRoute
-  param: { module: sfRestWebService, action: resource }
+  param: { module: sfRestWebService, action: resource, sf_format: xml }
   requirements:
     id: \d+
-    sf_method: [GET, POST, PUT, DELETE]
+    sf_method: [GET, PUT, DELETE]
 
 ws_500:
   url:  /api/error

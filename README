@@ -34,3 +34,7 @@ or
 
 .if you turn on authentication, remember to specify a secure route.
   if you have module "default" enabled, the route can be "secure" ( which is the name of the "default/secure" route )
+
+.Edit the 500Success.php template which handles internal errors
+
+.Short open tags OFF

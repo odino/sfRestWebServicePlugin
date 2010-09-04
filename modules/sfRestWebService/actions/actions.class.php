@@ -6,25 +6,43 @@ class sfRestWebServiceActions extends sfActions
   {
     parent::preExecute();
 
+    $manager = Doctrine_Manager::getInstance();
+    $manager->setAttribute(Doctrine::ATTR_VALIDATE, Doctrine::VALIDATE_ALL);
+
     if ($this->isProtected())
     {
       $this->authenticate($this->request);
     }
+
+    $this->feedback = '';
   }
 
   public function executeEntry(sfWebRequest $request)
   {
     $query = $this->getQuery($request);
+    $this->executeRequest($query, $request);
   }
   
   public function executeResource(sfWebRequest $request)
   {
     $query = $this->getQuery($request);
+    $this->object = $query->where('id = ?', $request->getParameter('id'))->fetchOne();
+
+    if (!$this->object)
+    {
+      $this->feedback = 'Unable to load the specified resource';
+      $this->setTemplate('500');
+    }
+    else
+    {
+      $this->setTemplate('object');
+      $this->executeRequest($query, $request);
+    }
   }
 
   public function execute500(sfWebRequest $request)
   {
-    
+    $this->feedback = 'Internal server error: unsupported service';
   }
 
   protected function authenticate(sfWebRequest $request)
@@ -35,7 +53,7 @@ class sfRestWebServiceActions extends sfActions
     {
       return true;
     }
-
+    
     $this->response->setStatusCode('403');
     $this->redirect(sfConfig::get('app_ws_protected_route'), '403');
   }
@@ -49,6 +67,13 @@ class sfRestWebServiceActions extends sfActions
     {
       $this->forward404();
     }
+  }
+
+  protected function executeRequest(Doctrine_Query $query, sfWebRequest $request)
+  {
+    // TODO: use an inflector
+    $request_type = 'execute'.ucfirst((strtolower($request->getMethod()))).'Request';
+    $this->$request_type($query, $request);
   }
 
   protected function getQuery(sfWebRequest $request)
@@ -67,5 +92,46 @@ class sfRestWebServiceActions extends sfActions
   protected function isProtected()
   {
     return sfConfig::get('app_ws_protected');
+  }
+
+  protected function executeDeleteRequest(Doctrine_Query $query, sfWebRequest $request)
+  {
+    $this->object->delete();
+    $this->feedback = 'Object has been deleted';
+    $this->setTemplate('delete');
+  }
+
+  protected function executeGetRequest(Doctrine_Query $query, sfWebRequest $request)
+  {
+    $this->objects = $query->execute();
+  }
+
+
+  protected function executePostRequest(Doctrine_Query $query, sfWebRequest $request)
+  {
+    $this->setTemplate('object');
+    $this->object = new $this->model;
+    $this->updateObject($request);
+  }
+
+  protected function executePutRequest(Doctrine_Query $query, sfWebRequest $request)
+  {
+    $this->updateObject($request);
+  }
+
+  protected function updateObject(sfWebRequest $request)
+  {
+    // TODO: nedd a way to retrieve only PUT parameters, not POST
+    $this->object->fromArray($request->getPostParameters());
+
+    try
+    {
+      $this->object->save();
+    }
+    catch (Exception $e)
+    {
+      $this->feedback = $e->getMessage();
+      $this->setTemplate('500');
+    }
   }
 }
