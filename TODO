@@ -17,13 +17,13 @@
 +* response
 +  * format
 +    * XML
-    * YAML
++    * YAML
 +    * JSON
 
 * Webservice
 
-* Configuration
-  * authentication enabled/disabled
++* Configuration
++  * authentication enabled/disabled
   * api key file
   * allowed models
     * allowed states
@@ -31,3 +31,7 @@
 
 * Other
   * specify models in the app.yml
+
+* Bugs
+  * eliminate TODOs
+  * test PUT responses via curl -X PUT http://...
