@@ -6,8 +6,11 @@ class sfRestWebServiceActions extends sfActions
   {
     parent::preExecute();
 
+    // TODO: extract
     $manager = Doctrine_Manager::getInstance();
     $manager->setAttribute(Doctrine::ATTR_VALIDATE, Doctrine::VALIDATE_ALL);
+
+    $this->config   = new sfRestWebServiceConfiguration(new sfYaml, sfConfig::get('sf_environment'));
 
     if ($this->isProtected())
     {
@@ -49,7 +52,7 @@ class sfRestWebServiceActions extends sfActions
 
   protected function authenticate(sfWebRequest $request)
   { 
-    $ip_addresses = sfConfig::get('app_ws_allowed');
+    $ip_addresses = $this->config->get('allowed_ip');
 
     if (is_array($ip_addresses) && in_array($request->getRemoteAddress(), $ip_addresses))
     {
@@ -57,7 +60,7 @@ class sfRestWebServiceActions extends sfActions
     }
     
     $this->response->setStatusCode('403');
-    $this->redirect(sfConfig::get('app_ws_protected_route'), '403');
+    $this->redirect($this->config->get('protected_route'), '403');
   }
 
   protected function checkContentType(sfWebRequest $request)
@@ -72,7 +75,7 @@ class sfRestWebServiceActions extends sfActions
   protected function checkModelAvailability(sfWebRequest $request)
   {
     $this->model = $request->getParameter('model');
-    $models = sfConfig::get('app_ws_models');
+    $models = $this->config->get('models');
 
     if (is_array($models) && !array_key_exists($this->model, $models))
     {
@@ -102,7 +105,7 @@ class sfRestWebServiceActions extends sfActions
 
   protected function isProtected()
   {
-    return sfConfig::get('app_ws_protected');
+    return $this->config->get('protected');
   }
 
   protected function executeDeleteRequest(Doctrine_Query $query, sfWebRequest $request)

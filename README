@@ -11,13 +11,16 @@ remember this plugin works with Doctrine.
 .Enable the module in settings.yml of your app:
   enabled_modules:        [sfRestWebService]
 
-.app yaml:
-  all:
-    ws:
-      protected: true
-      allowed: [127.0.0.1]
-      protected_route: secure
-      models: ~
+.config yaml:
+protected: true
+allowed_ip: [127.0.0.1]
+protected_route: secure
+format: [yml, json, xml]
+models:
+  user:
+    method_for_query: findActives
+  non_active_model:
+    method_for_query: ~
 
 .Allowed models
       models: ~
