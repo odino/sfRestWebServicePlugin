@@ -1,8 +1,7 @@
-dev:
+all:
   protected: true
   allowed_ip: [127.0.0.1]
   protected_route: secure
-  format: [yml, json, xml]
   models:
     user:
       method_for_query: findActives

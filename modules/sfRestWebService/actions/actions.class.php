@@ -6,11 +6,8 @@ class sfRestWebServiceActions extends sfActions
   {
     parent::preExecute();
 
-    // TODO: extract
-    $manager = Doctrine_Manager::getInstance();
-    $manager->setAttribute(Doctrine::ATTR_VALIDATE, Doctrine::VALIDATE_ALL);
-
-    $this->config   = new sfRestWebServiceConfiguration(new sfYaml, sfConfig::get('sf_environment'));
+    $this->config = new sfRestWebServiceConfiguration($this->getContext()->getConfiguration());
+    $this->enableDoctrineValidation();
 
     if ($this->isProtected())
     {
@@ -83,10 +80,16 @@ class sfRestWebServiceActions extends sfActions
     }
   }
 
+  protected function enableDoctrinevalidation()
+  {
+    $manager = Doctrine_Manager::getInstance();
+    $manager->setAttribute(Doctrine::ATTR_VALIDATE, Doctrine::VALIDATE_ALL);
+  }
+
   protected function executeRequest(Doctrine_Query $query, sfWebRequest $request)
   {
-    // TODO: use an inflector
-    $request_type = 'execute'.ucfirst((strtolower($request->getMethod()))).'Request';
+    $method = ucfirst((strtolower($request->getMethod())));
+    $request_type = 'execute'.$method.'Request';
     $this->$request_type($query, $request);
   }
 

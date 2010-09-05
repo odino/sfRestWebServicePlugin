@@ -24,13 +24,9 @@
 
 +* Configuration
 +  * authentication enabled/disabled
-  * api key file
   * allowed models
     * allowed states
     * method for query
-
-* Other
-  * specify models in the app.yml
 
 * Bugs
   * eliminate TODOs
