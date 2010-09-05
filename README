@@ -22,7 +22,7 @@ all:
     non_active_model:
       method_for_query: ~
 
-.Allowed models
+.[TODO: revisit ;-)]Allowed models
       models: ~
 
 or

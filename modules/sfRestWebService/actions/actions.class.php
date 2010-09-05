@@ -49,7 +49,7 @@ class sfRestWebServiceActions extends sfActions
 
   protected function authenticate(sfWebRequest $request)
   { 
-    $ip_addresses = $this->config->get('allowed_ip');
+    $ip_addresses = $this->config->get('allowed');
 
     if (is_array($ip_addresses) && in_array($request->getRemoteAddress(), $ip_addresses))
     {
@@ -57,7 +57,7 @@ class sfRestWebServiceActions extends sfActions
     }
     
     $this->response->setStatusCode('403');
-    $this->redirect($this->config->get('protected_route'), '403');
+    $this->redirect($this->config->get('protectedRoute'), '403');
   }
 
   protected function checkContentType(sfWebRequest $request)
@@ -71,13 +71,15 @@ class sfRestWebServiceActions extends sfActions
 
   protected function checkModelAvailability(sfWebRequest $request)
   {
-    $this->model = $request->getParameter('model');
-    $models = $this->config->get('models');
+    $service = $request->getParameter('model');
+    $services = $this->config->get('services');
 
-    if (is_array($models) && !array_key_exists($this->model, $models))
+    if (is_array($services) && !array_key_exists($service, $services))
     {
       $this->forward404();
     }
+
+    $this->model = $this->config->get('services_'.$service.'_model');
   }
 
   protected function enableDoctrinevalidation()

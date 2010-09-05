@@ -24,7 +24,7 @@
 
 +* Configuration
 +  * authentication enabled/disabled
-  * allowed models
++  * allowed models
     * allowed states
     * method for query
 

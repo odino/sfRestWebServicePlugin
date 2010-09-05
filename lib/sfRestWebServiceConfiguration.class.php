@@ -17,13 +17,22 @@ class sfRestWebServiceConfiguration
 
   public function get($param)
   {
-    if (!array_key_exists($param, $this->config))
+    $params = explode('_', $param);
+
+    $configuration = $this->config;
+
+    foreach ($params as $key => $param)
     {
-      $message = 'Please provide a '.$param.' in sfRestWebService config.yml for the '.$this->environment.' environment';
-      throw new sfException($message);
+      if (!array_key_exists($param, $configuration))
+      {
+        $message = 'Please provide a '.$param.' in sfRestWebService config.yml for the '.$this->environment.' environment';
+        throw new sfException($message);
+      }
+
+      $configuration = $configuration[$param];
     }
 
-    return $this->config[$param];
+    return $configuration;
   }
 
   protected function checkYamlhandler($yaml_handler)
