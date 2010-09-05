@@ -10,7 +10,7 @@
 +  * POST
 +  * GET
 +    * method for query
-    * by column
++    * by column
 +  * PUT
 +  * DELETE
 
@@ -20,7 +20,7 @@
 +    * YAML
 +    * JSON
 
-* Webservice
++* Webservice
 
 +* Configuration
 +  * authentication enabled/disabled

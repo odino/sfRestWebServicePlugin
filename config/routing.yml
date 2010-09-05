@@ -14,6 +14,14 @@ ws_resource:
     id: \d+
     sf_method: [GET, PUT, DELETE]
 
+ws_search:
+  url:  /api/:model/search/:column/:value.:sf_format
+  class: sfRequestRoute
+  param: { module: sfRestWebService, action: search, sf_format: xml }
+  requirements:
+    id: \d+
+    sf_method: [GET]
+
 ws_500:
   url:  /api/error
   param: { module: sfRestWebService, action: 500 }

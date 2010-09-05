@@ -40,6 +40,27 @@ class sfRestWebServiceActions extends sfActions
     }
   }
 
+  public function executeSearch(sfWebRequest $request)
+  {
+    $query    = $this->getQuery($request);
+    $column   = $request->getParameter('column');
+
+    if (!Doctrine::getTable($this->model)->hasColumn($column))
+    {
+      $this->response->setStatusCode('400');
+      $this->feedback = 'Invalid search column';
+      $this->setTemplate('500');
+    }
+    else
+    {
+      $value    = $request->getParameter('value');
+      $query->andWhere("$column LIKE ?", "%$value%");
+
+      $this->executeRequest($query, $request);
+      $this->setTemplate('entry');
+    }
+  }
+
   public function execute500(sfWebRequest $request)
   {
     $this->feedback = 'Internal server error: unsupported service';
