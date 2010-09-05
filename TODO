@@ -28,9 +28,9 @@
 +    * allowed states
 +    * method for query
 
-* And...
-  * eliminate TODOs
++* And...
   * test PUT responses via curl -X PUT http://...
+  * eliminate TODOs
   * refactore routes ( :model becomes :service )
   * 500 template becomes 'error'
   * fix and format the README
