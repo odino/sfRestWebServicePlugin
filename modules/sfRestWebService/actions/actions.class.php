@@ -15,8 +15,6 @@ class sfRestWebServiceActions extends sfActions
     }
 
     $this->checkContentType();
-
-    $this->feedback = '';
   }
 
   public function executeEntry(sfWebRequest $request)
@@ -47,6 +45,18 @@ class sfRestWebServiceActions extends sfActions
     $this->feedback = 'Internal server error: unsupported service';
   }
 
+  protected function appendMethodForQuery(Doctrine_Query $query)
+  {
+    $method_for_query = $this->config->get('services_'.$this->service.'_methodForQuery');
+
+    if ($method_for_query)
+    {
+      return Doctrine::getTable($this->model)->$method_for_query($query);
+    }
+
+    return $query;
+  }
+
   protected function authenticate()
   { 
     $ip_addresses = $this->config->get('allowed');
@@ -71,16 +81,16 @@ class sfRestWebServiceActions extends sfActions
 
   protected function checkServiceAvailability(sfWebRequest $request)
   {
-    $service = $request->getParameter('model');
+    $this->service = $request->getParameter('model');
     $services = $this->config->get('services');
 
-    if (is_array($services) && !array_key_exists($service, $services))
+    if (is_array($services) && !array_key_exists($this->service, $services))
     {
       $this->forward404();
     }
 
     $this->checkRequestState();
-    $this->model = $this->config->get('services_'.$service.'_model');
+    $this->model = $this->config->get('services_'.$this->service.'_model');
   }
 
   protected function checkRequestState()
@@ -138,6 +148,7 @@ class sfRestWebServiceActions extends sfActions
 
   protected function executeGetRequest(Doctrine_Query $query, sfWebRequest $request)
   {
+    $query = $this->appendMethodForQuery($query);
     $this->objects = $query->execute();
   }
 

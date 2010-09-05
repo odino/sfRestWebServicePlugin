@@ -5,7 +5,11 @@ all:
   services:
     user:
       model:  user
-      methodForQuery: findActives
+      methodForQuery: ~
+      states: ~
+    userInReverseOrder:
+      model:  user
+      methodForQuery: getDesc
       states: ~
     user405:
       model:  user

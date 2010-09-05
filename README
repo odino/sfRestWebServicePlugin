@@ -14,13 +14,21 @@ remember this plugin works with Doctrine.
 .config yaml ( you can override it ):
 all:
   protected: true
-  allowed_ip: [127.0.0.1]
-  protected_route: secure
-  models:
+  allowed: [127.0.0.1]
+  protectedRoute: secure
+  services:
     user:
-      method_for_query: findActives
-    non_active_model:
-      method_for_query: ~
+      model:  user
+      methodForQuery: findActives
+      states: ~
+    user405:
+      model:  user
+      methodForQuery: ~
+      states: [post]
+    nonActiveModel:
+      model:  non_active_model
+      methodForQuery: ~
+      states: ~
 
 .[TODO: revisit ;-)]Allowed models
       models: ~

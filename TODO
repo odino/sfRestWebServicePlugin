@@ -8,8 +8,8 @@
 
 +* request
 +  * POST
-  * GET
-    * method for query
++  * GET
++    * method for query
     * by column
 +  * PUT
 +  * DELETE
@@ -26,10 +26,13 @@
 +  * authentication enabled/disabled
 +  * allowed models
 +    * allowed states
-    * method for query
++    * method for query
 
-* Bugs
+* And...
   * eliminate TODOs
   * test PUT responses via curl -X PUT http://...
   * refactore routes ( :model becomes :service )
   * 500 template becomes 'error'
+  * fix and format the README
+  * document the methodForQuery param
+  * check all TODO's are +
