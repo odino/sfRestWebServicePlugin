@@ -25,9 +25,11 @@
 +* Configuration
 +  * authentication enabled/disabled
 +  * allowed models
-    * allowed states
++    * allowed states
     * method for query
 
 * Bugs
   * eliminate TODOs
   * test PUT responses via curl -X PUT http://...
+  * refactore routes ( :model becomes :service )
+  * 500 template becomes 'error'

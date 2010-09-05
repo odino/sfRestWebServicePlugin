@@ -6,6 +6,12 @@ all:
     user:
       model:  user
       methodForQuery: findActives
+      states: ~
+    user405:
+      model:  user
+      methodForQuery: ~
+      states: [post]
     nonActiveModel:
       model:  non_active_model
       methodForQuery: ~
+      states: ~

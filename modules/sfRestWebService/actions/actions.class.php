@@ -11,10 +11,10 @@ class sfRestWebServiceActions extends sfActions
 
     if ($this->isProtected())
     {
-      $this->authenticate($this->request);
+      $this->authenticate();
     }
 
-    $this->checkContentType($this->request);
+    $this->checkContentType();
 
     $this->feedback = '';
   }
@@ -47,11 +47,11 @@ class sfRestWebServiceActions extends sfActions
     $this->feedback = 'Internal server error: unsupported service';
   }
 
-  protected function authenticate(sfWebRequest $request)
+  protected function authenticate()
   { 
     $ip_addresses = $this->config->get('allowed');
 
-    if (is_array($ip_addresses) && in_array($request->getRemoteAddress(), $ip_addresses))
+    if (is_array($ip_addresses) && in_array($this->request->getRemoteAddress(), $ip_addresses))
     {
       return true;
     }
@@ -60,16 +60,16 @@ class sfRestWebServiceActions extends sfActions
     $this->redirect($this->config->get('protectedRoute'), '403');
   }
 
-  protected function checkContentType(sfWebRequest $request)
+  protected function checkContentType()
   {
-    if ($request->getRequestFormat() == 'yaml')
+    if ($this->request->getRequestFormat() == 'yaml')
     {
       $this->setLayout(false);
       $this->getResponse()->setContentType('text/yaml');
     }
   }
 
-  protected function checkModelAvailability(sfWebRequest $request)
+  protected function checkServiceAvailability(sfWebRequest $request)
   {
     $service = $request->getParameter('model');
     $services = $this->config->get('services');
@@ -79,7 +79,23 @@ class sfRestWebServiceActions extends sfActions
       $this->forward404();
     }
 
+    $this->checkRequestState();
     $this->model = $this->config->get('services_'.$service.'_model');
+  }
+
+  protected function checkRequestState()
+  {
+    $service = $this->request->getParameter('model');
+    $states = $this->config->get('services_'.$service.'_states');
+    
+    if (is_array($states) && !array_key_exists($this->request->getMethod(), $states))
+    {
+      $this->response->setStatusCode('405');
+      $this->feedback = 'The request method isn\'t allowed';
+      $this->setTemplate('500');
+    }
+
+    return true;
   }
 
   protected function enableDoctrinevalidation()
@@ -97,7 +113,7 @@ class sfRestWebServiceActions extends sfActions
 
   protected function getQuery(sfWebRequest $request)
   {
-    $this->checkModelAvailability($request);
+    $this->checkServiceAvailability($request);
 
     if (!class_exists($this->model))
     {
