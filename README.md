@@ -334,3 +334,22 @@ The services send responses in:
   * JSON ( http://domain.tld/app.php/api/user.json )
   * YAML ( http://domain.tld/app.php/api/user.yaml )
 
+## The `methodForQuery` parameter
+
+If specified, it's used in a case: processing **a GET request on an entry**.
+
+Supposing your service's `methodForQuery` is `findItalian` and the `model` parameter is `user`
+you will need to create a new method in the `UserTable` class:
+
+    public function findItalian(Doctrine_Query $query)
+    {
+      $query = // ...do stuff with the query...
+
+      return $query;
+    }
+
+The `$query` that the method receives is always:
+
+    Doctrine::getTable('model')->createQuery('wsmodel');
+
+**NOTE:** do not execute the query.
