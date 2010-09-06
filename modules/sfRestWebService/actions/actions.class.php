@@ -178,19 +178,18 @@ class sfRestWebServiceActions extends sfActions
   {
     $this->setTemplate('object');
     $this->object = new $this->model;
+    $this->object->fromArray($request->getPostParameters());
     $this->updateObject($request);
   }
 
   protected function executePutRequest(Doctrine_Query $query, sfWebRequest $request)
   {
+    $this->object->fromArray($request->getPostParameters());
     $this->updateObject($request);
   }
 
   protected function updateObject(sfWebRequest $request)
   {
-    // TODO: nedd a way to retrieve only PUT parameters, not POST
-    $this->object->fromArray($request->getPostParameters());
-
     try
     {
       $this->object->save();

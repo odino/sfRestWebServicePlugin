@@ -49,3 +49,5 @@ or
 .Edit the 500Success.php template which handles internal errors
 
 .Short open tags OFF
+
+.Since PHP sucks in so many ways handling PUT requests...
