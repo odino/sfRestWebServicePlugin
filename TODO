@@ -31,6 +31,6 @@
 +* And...
 +  * refactore routes ( :model becomes :service )
 +  * 500 template becomes 'error'
-  * fix and format the README
++  * fix and format the README
   * document the methodForQuery param
   * check all TODO's are +

@@ -29,7 +29,7 @@ Last step, enable the module in the settings.yml of the application you want the
 
 You can - obviously - override and extends plugin's classes by creating them in your application's module directory.
 
-The `sfRestWebServicePlugin` is based on the sfRestWebService module bundled with the plugin, so you only need to replicate the module on your application:
+The `sfRestWebServicePlugin` is based on the `sfRestWebService` module bundled with the plugin, so you only need to replicate the module on your application:
 
     $ mkdir apps/myApp/modules/sfRestWebService
 
@@ -37,11 +37,10 @@ For example, to override a template you will only need to create it on your appl
 
 `apps/myApp/modules/sfRestWebService/templates/errorSuccess.json.php`
 
-The **core** configuration on the module lies in the config.yml that you have to override locally:
+The **core** configuration on the module lies in the config.yml that you have to locally override:
 
     $ touch apps/myApp/modules/sfRestWebService/config/config.yml
 
-.config yaml ( you can override it ):
     all:
       protected: true
       allowed: [127.0.0.1]
@@ -83,3 +82,255 @@ It would not be such a difficult matter to make the plugin work also with `short
 ## A specification
 
 Since **PHP** sucks in so many ways handling PUT requests this plugin handles them with symfony's native REST architecture ( so, not not real PUT requests, but requests with the additional parametere `sf_method` set to PUT ).
+
+## URLs
+
+Suppose a configuration like:
+
+    all:
+      protected: true
+      allowed: [127.0.0.1]
+      protectedRoute: secure
+      services:
+        users:
+          model:  User
+          methodForQuery: ~
+          states: ~
+
+The URLs that the `sfRestWebService` module will match are:
+
+  * http://domain.tld/app.php/api/user ( known as **entry** )
+  * http://domain.tld/app.php/api/user/1 ( known as **resource** )
+  * http://domain.tld/app.php/api/user/search/name/fabien ( known as **search** )
+
+From now on, we will refer to _ask an entry_, or _ask a search_ and so on.
+
+
+## Asking the services
+
+Here are just a few examples on how to query an imaginary service with CURL.
+
+### Ask an entry
+
+    GET
+
+    $ curl -X GET http://domain.tld/index.php/api/user
+
+    POST
+
+    $ curl -X GET http://domain.tld/index.php/api/user -F name='John Doe' -F email='john@sf.com'
+
+### Ask a resource
+
+    GET
+
+    $ curl -X GET http://domain.tld/index.php/api/user/1
+
+    DELETE
+
+    $ curl -X DELETE http://domain.tld/index.php/api/user/1
+
+    PUT
+
+    $ curl -X POST http://domain.tld/index.php/api/user/1 -F sf_method=PUT -F name='John C.Hanged'
+
+### Ask a search
+
+    GET
+
+    $ curl -X GET http://domain.tld/index.php/api/user/search/email/gmail
+
+## Responses
+
+### Entry
+
+    http://domain.tld/app.php/api/user
+
+#### GET
+
+Returns a collection of objects:
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <objects>
+      <object id="1">
+        <id>1</id>
+        <name>John Doe</name>
+      </object>
+      <object id="2">
+        <id>2</id>
+        <name>Mark Madsen</name>
+      </object>
+    </objects>
+
+an error if the service is available but the configuration is malformed:
+
+    <error>
+      Internal server error: unsupported service
+    </error>
+
+or a 404 status code if the service doesn't exists.
+
+#### POST
+
+Returns the just created object:
+
+    <object id="7">
+        <id>7</id>
+        <name>Alessandro Nadalin</name>
+    </object>
+
+an error if the data passed via POST doesn't pass validation:
+
+    <error>
+      Validation failed in class User
+
+      1 field had validation error:
+
+        * 1 validator failed on name (notnull)
+    </error>
+
+an error if the service is available but the configuration is malformed:
+
+    <error>
+      Internal server error: unsupported service
+    </error>
+
+or a 404 status code if the service doesn't exists.
+
+#### DELETE
+
+Not supported.
+
+#### PUT
+
+Not supported.
+
+### Resource
+
+    http://domain.tld/app.php/api/user/:id
+
+#### GET
+
+Returns the requested resource by ID:
+
+    <object id="7">
+        <id>7</id>
+        <name>Alessandro Nadalin</name>
+    </object>
+
+an error if the resource doesn't exist:
+
+    <error>
+      Unable to load the specified resource
+    </error>
+
+an error if the service is available but the configuration is malformed:
+
+    <error>
+      Internal server error: unsupported service
+    </error>
+
+or a 404 status code if the service doesn't exists.
+
+#### POST
+
+Not supported.
+
+#### DELETE
+
+Returns a simple feedback:
+
+    <object>
+      Object has been deleted
+    </object>
+
+an error if the resource you are trying to delete doesn't exist:
+
+    <error>
+      Unable to load the specified resource
+    </error>
+
+an error if the service is available but the configuration is malformed:
+
+    <error>
+      Internal server error: unsupported service
+    </error>
+
+or a 404 status code if the service doesn't exists.
+
+#### PUT
+
+Returns the just updated object:
+
+    <object id="7">
+        <id>7</id>
+        <name>Alessandro Nadalin has been updated</name>
+    </object>
+
+an error if the resource doesn't exist:
+
+    <error>
+      Unable to load the specified resource
+    </error>
+
+an error if the service is available but the configuration is malformed:
+
+    <error>
+      Internal server error: unsupported service
+    </error>
+
+or a 404 status code if the service doesn't exists.
+
+### Search
+
+#### GET
+
+    http://domain.tld/app.php/api/user/search/:column/:value
+
+Returns a collection of objects matching a `where(":column LIKE ?", "%:value%")` statement:
+
+    <objects>
+      <object id="2">
+        <id>2</id>
+        <name>Mark Madsen</name>
+      </object>
+      <object id="7">
+        <id>7</id>
+        <name>Alessandro Nadalin</name>
+      </object>
+    </objects>
+
+an error if the column you are trying to search by doesn't exist:
+
+    <error>
+      Invalid search column
+    </error>
+
+an error if the service is available but the configuration is malformed:
+
+    <error>
+      Internal server error: unsupported service
+    </error>
+
+or a 404 status code if the service doesn't exists.
+
+#### POST
+
+Not supported.
+
+#### DELETE
+
+Not supported.
+
+#### PUT
+
+Not supported.
+
+## Formats
+
+The services send responses in:
+
+  * XML ( default format: http://domain.tld/app.php/api/user )
+  * JSON ( http://domain.tld/app.php/api/user.json )
+  * YAML ( http://domain.tld/app.php/api/user.yaml )
+
