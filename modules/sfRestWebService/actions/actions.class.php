@@ -102,7 +102,7 @@ class sfRestWebServiceActions extends sfActions
 
   protected function checkServiceAvailability(sfWebRequest $request)
   {
-    $this->service = $request->getParameter('model');
+    $this->service = $request->getParameter('service');
     $services = $this->config->get('services');
 
     if (is_array($services) && !array_key_exists($this->service, $services))
@@ -116,7 +116,7 @@ class sfRestWebServiceActions extends sfActions
 
   protected function checkRequestState()
   {
-    $service = $this->request->getParameter('model');
+    $service = $this->request->getParameter('service');
     $states = $this->config->get('services_'.$service.'_states');
     
     if (is_array($states) && !array_key_exists($this->request->getMethod(), $states))

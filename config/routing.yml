@@ -1,5 +1,5 @@
 ws_entry:
-  url: /api/:model.:sf_format
+  url: /api/:service.:sf_format
   class: sfRequestRoute
   param: { module: sfRestWebService, action: entry, sf_format: xml }
   requirements:
@@ -7,7 +7,7 @@ ws_entry:
     sf_method: [GET, POST]
 
 ws_resource:
-  url:  /api/:model/:id.:sf_format
+  url:  /api/:service/:id.:sf_format
   class: sfRequestRoute
   param: { module: sfRestWebService, action: resource, sf_format: xml }
   requirements:
@@ -15,7 +15,7 @@ ws_resource:
     sf_method: [GET, PUT, DELETE]
 
 ws_search:
-  url:  /api/:model/search/:column/:value.:sf_format
+  url:  /api/:service/search/:column/:value.:sf_format
   class: sfRequestRoute
   param: { module: sfRestWebService, action: search, sf_format: xml }
   requirements:
