@@ -1,11 +1,11 @@
 +* url
 +  /api/:key/:model/:id
 +  /api/:key/:model
-
++
 +* Authentication
 +  * check authentication is enabled
 +  * check the model is askable
-
++
 +* request
 +  * POST
 +  * GET
@@ -13,24 +13,24 @@
 +    * by column
 +  * PUT
 +  * DELETE
-
++
 +* response
 +  * format
 +    * XML
 +    * YAML
 +    * JSON
-
++
 +* Webservice
-
++
 +* Configuration
 +  * authentication enabled/disabled
 +  * allowed models
 +    * allowed states
 +    * method for query
-
++
 +* And...
-  * refactore routes ( :model becomes :service )
-  * 500 template becomes 'error'
++  * refactore routes ( :model becomes :service )
++  * 500 template becomes 'error'
   * fix and format the README
   * document the methodForQuery param
   * check all TODO's are +

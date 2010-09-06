@@ -31,7 +31,7 @@ class sfRestWebServiceActions extends sfActions
     if (!$this->object)
     {
       $this->feedback = 'Unable to load the specified resource';
-      $this->setTemplate('500');
+      $this->setTemplate('error');
     }
     else
     {
@@ -49,7 +49,7 @@ class sfRestWebServiceActions extends sfActions
     {
       $this->response->setStatusCode('400');
       $this->feedback = 'Invalid search column';
-      $this->setTemplate('500');
+      $this->setTemplate('error');
     }
     else
     {
@@ -64,6 +64,7 @@ class sfRestWebServiceActions extends sfActions
   public function execute500(sfWebRequest $request)
   {
     $this->feedback = 'Internal server error: unsupported service';
+    $this->setTemplate('error');
   }
 
   protected function appendMethodForQuery(Doctrine_Query $query)
@@ -123,7 +124,7 @@ class sfRestWebServiceActions extends sfActions
     {
       $this->response->setStatusCode('405');
       $this->feedback = 'The request method isn\'t allowed';
-      $this->setTemplate('500');
+      $this->setTemplate('error');
     }
 
     return true;
@@ -197,7 +198,7 @@ class sfRestWebServiceActions extends sfActions
     catch (Exception $e)
     {
       $this->feedback = $e->getMessage();
-      $this->setTemplate('500');
+      $this->setTemplate('error');
     }
   }
 }
